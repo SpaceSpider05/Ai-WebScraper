@@ -1,9 +1,10 @@
 import openai
+from dotenv import load_dotenv
 import os
 
-openaikey = "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"
-openai.api_key = openaikey
+load_dotenv()
 
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 template_gpt = (
     "You are tasked with extracting specific information from the following text content:\n"
@@ -24,10 +25,8 @@ def parse_with_openai(dom_chunks, parse_description):
         
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",  
-            messages=[
-                {"role": "system", "content": "You are an AI assistant that extracts specific data."},
-                {"role": "user", "content": prompt}
-            ]
+            messages=[{"role": "system", "content": "You are an AI assistant that extracts specific data."},
+                      {"role": "user", "content": prompt}]
         )
         result_text = response.choices[0].message["content"].strip() 
         print(f"Parse batch {i} of {len(dom_chunks)}")
